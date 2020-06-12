@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  web:
+    build: .
+    volumes:
+      - ./django_blog:/
+    command: python manage.py makemigrations
+ #   command: python /tmp/manage.py migrate 
+    command: python manage.py  runserver 0.0.0.0:8000
+    networks:
+      - my_network
+    depends_on:
+      - db
+  db:
+    image: postgres
+    volumes:
+      - ./postgres_data:/var/lib/postgres/data/
+    environment:
+#      - POSTGRES_USER=postgres
+#     - POSTGRES_PASSWORD=postgres
+#      - POSTGRES_DB=db
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    networks:
+      - my_network
+  nginx:
+   image: nginx
+   volumes:
+      - ./django_blog/config/nginx/:/etc/nginx/conf.d
+      - ./django_blog:/static
+   ports:
+    - 8000:8000
+   depends_on:
+    - web
+    - db
+   networks:
+     - my_network
+networks:
+ my_network: 
+  driver: bridge
+ 
