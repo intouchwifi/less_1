@@ -4,10 +4,10 @@ services:
   web:
     build: .
     volumes:
-      - ./django_blog:/
-    command: python manage.py makemigrations
+      - ./django_blog:/tmp
+    command: python /tmp/manage.py makemigrations
  #   command: python /tmp/manage.py migrate 
-    command: python manage.py  runserver 0.0.0.0:8000
+    command: python /tmp/manage.py  runserver 0.0.0.0:8000
     networks:
       - my_network
     depends_on:
